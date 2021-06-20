@@ -1,7 +1,7 @@
 /*
 10s阅读
-微信打开立即参与 -> http://h5.qzsjfc.xyz/j/h?upuid=136513&ch=xmy&type=1
-备用链接 -> http://h5.saibangkaile.xyz/j/h?upuid=136513&ch=xmy&type=1
+立即参与 -> http://h5.qzsjfc.xyz/j/h?upuid=145469&ch=xmy&type=1
+备用链接 -> http://h5.saibangkaile.xyz/j/h?upuid=145469&ch=xmy&type=1
 
 每小时有0.3 一天5轮 一天1.5
 进不去关注10秒读书极速版公众号用官方链接
@@ -10,7 +10,7 @@
 每次运行都要手动验证一次(也就是一天5次)
 点立即阅读,等文章出来后关闭页面(注意 千万不要返回)
 拉一人头提现0.3奖励0.5 0.8再奖励0.5
-https://t.me/wenmou_car
+ 
 
 [task_local]
 #10s阅读
