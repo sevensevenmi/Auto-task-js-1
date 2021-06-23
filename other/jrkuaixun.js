@@ -31,8 +31,8 @@ hostname = m.lainiwl.top
  
 */
 const $ = new Env('10s阅读');
-const notify = $.isNode() ? require('./sendNotify') : '';
-const jrpush = $.isNode() ? (process.env.jrpush ? process.env.jrpush : false) :false;
+// const notify = $.isNode() ? require('./sendNotify') : '';
+// const jrpush = $.isNode() ? (process.env.jrpush ? process.env.jrpush : false) :false;
 
 let host = $.getdata('read10surl')?$.getdata('read10surl'):`http://m.lainiwl.top`;
 let cookiesArr = [$.getdata('read10sck')]
