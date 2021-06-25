@@ -39,49 +39,6 @@ let headers ={cookie:process.env.xjck || "xxx_api_auth=6663306534383363663637323
     });
 }
 
-
-async function xjtask(){
-await get("每日签到", "/ucp/task/sign")
-await get("点击视频广告","/ucp/task/adviewClick")
-root@487cb07f10ab:~/jd/other $ cat xjvideo.js 
-//https://YYJVAZ.gg257.club?inviteCode=YYJVAZ
-const axios = require("axios")
-let result ="【香蕉视频每日任务】："
-let headers ={cookie:process.env.xjck || "xxx_api_auth=6663306534383363663637323639656436643930326362663736383463316532"}function get(name, url, data) {
-    return new Promise(async (resolve, reject) => {
-        url = "https://3ulrp807b59vf7w3k5w9.guoguoapps.com"+ url
-        data = data ? data : null
-        if (data) {
-            res = axios.post(url, data, {
-                headers
-            })
-        } else {
-            res = axios.get(url, {
-                headers
-            })
-        }
-        res
-            .then(response => {
-                if (response.data.retcode == 0) {
-                    console.log(`${name}：成功`)
-                    msg=name+"：成功  "
-                } else {
-                    msg=name + "：" + response.data.errmsg+" || "
-                }
-                console.log(msg)
-                result += (name=="每日签到"?msg:"  ")
-                resolve(response.data);
-            })
-            .catch(err => {
-                console.log(err)
-                resolve({
-                    tip: err
-                });
-            });
-    });
-}
-
-
 async function xjtask(){
 await get("每日签到", "/ucp/task/sign")
 await get("点击视频广告","/ucp/task/adviewClick")
