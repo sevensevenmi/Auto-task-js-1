@@ -21,6 +21,15 @@ cron "20 13 * * 6" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/j
 获取互助码 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_get_share_code.js, cronexpr="20 13 * * 6", timeout=3600, enable=true
  */
 const $ = new Env("获取互助码");
+// 农场
+const farmCode = []
+// 种豆嘚都
+const plantBeanCode = []
+// 签到领现金
+const cashCode = []
+// 闪购盲盒
+const sgmhCode = []
+
 const JD_API_HOST = "https://api.m.jd.com/client.action";
 let cookiesArr = [], cookie = '', message;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -54,6 +63,11 @@ if ($.isNode()) {
       await getShareCode()
     }
   }
+  // 上面执行完了所有账号，现在格式化导出
+  await pjCode(farmCode, "农场互助\nexport FRUITSHARECODES=")
+  await pjCode(farmCode, "种豆嘚豆\nexport PLANT_BEAN_SHARECODES=")
+  await pjCode(cashCode, "签到领现金\nexport JD_CASH_SHARECODES=")
+  await pjCode(sgmhCode, "闪购盲盒\nexport JDSGMH_SHARECODES=")
 })()
   .catch((e) => {
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -411,6 +425,7 @@ async function getPlantBean() {
       const shareUrl = $.plantBeanIndexResult.data.jwordShareInfo.shareUrl;
       $.myPlantUuid = getParam(shareUrl, "plantUuid");
       console.log(`【京东账号${$.index}（${$.nickName || $.UserName}）种豆得豆】${$.myPlantUuid}`);
+      plantBeanCode.push($.myPlantUuid)
 
     } else {
       console.log(
@@ -477,6 +492,7 @@ async function getJDFruit() {
       console.log(
         `【京东账号${$.index}（${$.nickName || $.UserName}）京东农场】${$.farmInfo.farmUserPro.shareCode}`
       );
+      farmCode.push($.farmInfo.farmUserPro.shareCode)
 
     } else {
       /*console.log(
@@ -557,6 +573,7 @@ async function getSgmh(timeout = 0) {
           if (data.data.bizCode === 0) {
             const invites  = data.data.result.taskVos.filter(item => item['taskName'] === '邀请好友助力');
             console.log(`【京东账号${$.index}（${$.nickName || $.UserName}）闪购盲盒】${invites && invites[0]['assistTaskDetailVo']['taskToken']}`)
+            sgmhCode.push(invites[0]['assistTaskDetailVo']['taskToken'])
           }
         } catch (e) {
           $.logErr(e, resp);
@@ -634,6 +651,7 @@ function getJdCash() {
             data = JSON.parse(data);
             if(data.code===0 && data.data.result){
               console.log(`【京东账号${$.index}（${$.nickName || $.UserName}）签到领现金】${data.data.result.inviteCode}`);
+              cashCode.push(data.data.result.inviteCode)
             }
           }
         }
@@ -645,18 +663,34 @@ function getJdCash() {
     })
   })
 }
+// 互助吗格式
+async function pjCode(arrayCode, codeUsage){
+  console.log("互助码用途:",codeUsage)
+  for(let i=0;i<arrayCode.length;i++){
+    //拼接code
+    let pjCode = []
+    for(let j=0;j<arrayCode.length;j++){
+        if(i!=j){
+          pjCode.push(arrayCode[j])
+        }
+    }
+    console.log(pjCode.join('@'))
+  }
+  console.log('\n')
+}
+
+// 主要逻辑，执行输出助力吗
 async function getShareCode() {
   console.log(`======账号${$.index}开始======`)
   await getJDFruit()
-  await getJdPet()
   await getPlantBean()
-  await getJdFactory()
-  await getJxFactory()
-  await getJxNc()
-  await getJdZZ()
-  await getJoy()
+  // await getJdFactory()
+  // await getJxFactory()
+  // await getJxNc()
+  // await getJdZZ()
+  // await getJoy()
   await getSgmh()
-  await getCFD()
+  // await getCFD()
   await getJdCash()
   console.log(`======账号${$.index}结束======\n`)
 }
