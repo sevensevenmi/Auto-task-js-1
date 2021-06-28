@@ -33,8 +33,9 @@ hostname = m.lainiwl.top
 const $ = new Env('10s阅读');
 // const notify = $.isNode() ? require('./sendNotify') : '';
 // const jrpush = $.isNode() ? (process.env.jrpush ? process.env.jrpush : false) :false;
-
-let host = $.getdata('read10surl')?$.getdata('read10surl'):`http://m.lainiwl.top`;
+// back:http://m.lainiwl.top
+let origin_host = "m.aeva.top"
+let host = $.getdata('read10surl')?$.getdata('read10surl'):`http://${origin_host}`;
 let cookiesArr = [$.getdata('read10sck')]
 if ($.isNode()) {
     cookiesArr = process.env.Readck ? process.env.Readck.split("@") : []
@@ -110,10 +111,14 @@ function read(url1) {
         } else {
             url = url1
         }
+        // 修复， 请求中加入更多参数
       let headers = {
+            Host:origin_host,
+            Connection:"keep-alive",
+            "User-Agent":"Mozilla/5.0 (Linux; Android 10; RMX2117 Build/QP1A.190711.020; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045617 Mobile Safari/537.36 MMWEBID/4038 MicroMessenger/8.0.3.1880(0x2800033F) Process/tools WeChat/arm64 Weixin NetType/4G Language/zh_CN ABI/arm64",
+            "X-Requested-With": "XMLHttpRequest",
+            referer:host+'/read_channel/read2',
             cookie,
-            referer:url,
-            "X-Requested-With": "XMLHttpRequest"
         }
         let options = {
             headers,
