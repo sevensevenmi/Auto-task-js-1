@@ -1,6 +1,7 @@
 ## 特别鸣谢
 - Zy143L 的py扫码
 - wenmoux的10s和xj
+- wulove的津贴和小鸽
 # Auto-task-js
 collect some tasks with js automatically .
 ## Dirs' intro
