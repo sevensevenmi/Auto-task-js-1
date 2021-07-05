@@ -1,4 +1,5 @@
 /*
+被封号了， 不搞了
 10s阅读
 立即参与 -> http://h5.qzsjfc.xyz/j/h?upuid=145469&ch=xmy&type=1
 备用链接 -> http://h5.saibangkaile.xyz/j/h?upuid=145469&ch=xmy&type=1
@@ -10,32 +11,14 @@
 每次运行都要手动验证一次(也就是一天5次)
 点立即阅读,等文章出来后关闭页面(注意 千万不要返回)
 拉一人头提现0.3奖励0.5 0.8再奖励0.5
- 
+ */
 
-[task_local]
-#10s阅读
-0 8-14/1 * * * https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/jrkuaixun.js, tag=10s阅读, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
-[rewrite_local]
-#10s阅读
-.*read_channel\/do_read&pageshow.* url script-request-header https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/jrkuaixun.js
- 
-#loon
-http-request .*read_channel\/do_read&pageshow.* script-path=https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/jrkuaixun.js, requires-body=true, timeout=10, tag=10s阅读
- 
-#surge
- 
-10s阅读 = type=http-request,pattern=.*read_channel\/do_read&pageshow.*,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/Wenmoux/scripts/wen/other/jrkuaixun.js,script-update-interval=0
- 
-[MITM]
-hostname = m.lainiwl.top
- 
-*/
+
 const $ = new Env('10s阅读');
-// const notify = $.isNode() ? require('./sendNotify') : '';
-// const jrpush = $.isNode() ? (process.env.jrpush ? process.env.jrpush : false) :false;
-// back:http://m.lainiwl.top
-let origin_host = "m.aeva.top"
-let host = $.getdata('read10surl')?$.getdata('read10surl'):`http://${origin_host}`;
+const notify = $.isNode() ? require('./sendNotify') : '';
+const jrpush = $.isNode() ? (process.env.jrpush ? process.env.jrpush : false) :false;
+const UA = $.isNode() ? (process.env.Read10UA ? process.env.Read10UA : "Mozilla/5.0 (Linux; Android 11; Redmi K30 Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045617 Mobile Safari/537.36 MMWEBID/5077 MicroMessenger/8.0.6.1900(0x2800063D) Process/tools WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64") : ($.getdata('Read10UA') ? JSON.parse($.getdata('Read10UA')) : "Mozilla/5.0 (Linux; Android 11; Redmi K30 Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045617 Mobile Safari/537.36 MMWEBID/5077 MicroMessenger/8.0.6.1900(0x2800063D) Process/tools WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64")    
+let host = $.getdata('read10surl')?$.getdata('read10surl'):`http://m.xhh25.top`;
 let cookiesArr = [$.getdata('read10sck')]
 if ($.isNode()) {
     cookiesArr = process.env.Readck ? process.env.Readck.split("@") : []
@@ -96,6 +79,7 @@ function read10sck() {
     if ($request.url.indexOf("do_read") > -1) {
         const read10surls = $request.url
         let read10surl = read10surls.match(/(.+?)\/read_channel/)
+         $.setdata(JSON.stringify($request.headers),"read10surl")
 //        $.msg($.name, "", '10s阅读 获取数据获取成功！'+read10surl)
           if(read10surl)     $.setdata(read10surl[1],"read10surl")
         if ($request.headers.Cookie) $.setdata($request.headers.Cookie, `read10sck`)
@@ -107,18 +91,15 @@ function read10sck() {
 function read(url1) {
     return new Promise(async (resolve) => {
         if (!url1) {
-            url = `${host}/read_channel/do_read&pageshow&r=0.8321951810381554`
+            url = `${host}/read_channel/do_read&pageshow&r=`
         } else {
             url = url1
         }
-        // 修复， 请求中加入更多参数
       let headers = {
-            Host:origin_host,
-            Connection:"keep-alive",
-            "User-Agent":"Mozilla/5.0 (Linux; Android 10; RMX2117 Build/QP1A.190711.020; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045617 Mobile Safari/537.36 MMWEBID/4038 MicroMessenger/8.0.3.1880(0x2800033F) Process/tools WeChat/arm64 Weixin NetType/4G Language/zh_CN ABI/arm64",
-            "X-Requested-With": "XMLHttpRequest",
-            referer:host+'/read_channel/read2',
             cookie,
+            referer:url,
+            "X-Requested-With": "XMLHttpRequest",
+            "User-Agent": UA
         }
         let options = {
             headers,
@@ -135,13 +116,17 @@ function read(url1) {
                     if (!url1) {
                         console.log(data)
                         data = JSON.parse(data);
-                        if (data.url) {                       
-                            resolve(data.url)
+                        if (data.url) {
+                          if(!data.jkey){                  
+                            resolve(data.url)}else{
+                                    $.message = "该账号需要验证请手动阅读一次并关掉页面(不要点返回)"
+                         $.canRead = false
+                            }
                         } else {
-                            console.log(data.click_check)
-                            if (data.click_check||data.data.jkey) {
+                       //     console.log(data.click_check)
+                            if (data.click_check ) {
                                 $.message = "该账号需要验证请手动阅读一次并关掉页面(不要点返回)"
-                        //        console.log($.message)
+                                  console.log($.message)
                             } else {
                                 console.log(data)
                             }

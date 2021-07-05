@@ -29,6 +29,8 @@ const plantBeanCode = []
 const cashCode = []
 // 闪购盲盒
 const sgmhCode = []
+// 东东工厂
+const ddfactoryCode = []
 
 const JD_API_HOST = "https://api.m.jd.com/client.action";
 let cookiesArr = [], cookie = '', message;
@@ -64,10 +66,11 @@ if ($.isNode()) {
     }
   }
   // 上面执行完了所有账号，现在格式化导出
-  await pjCode(farmCode, "农场互助\nexport FRUITSHARECODES=")
-  await pjCode(farmCode, "种豆嘚豆\nexport PLANT_BEAN_SHARECODES=")
-  await pjCode(cashCode, "签到领现金\nexport JD_CASH_SHARECODES=")
-  await pjCode(sgmhCode, "闪购盲盒\nexport JDSGMH_SHARECODES=")
+  console.log("直接复制以下所有内容到config.sh尾部就行")
+  await pjCode(farmCode, "农场互助\nexport FRUITSHARECODES='")
+  await pjCode(farmCode, "种豆嘚豆\nexport PLANT_BEAN_SHARECODES='")
+  await pjCode(cashCode, "签到领现金\nexport JD_CASH_SHARECODES='")
+  await pjCode(sgmhCode, "闪购盲盒\nexport JDSGMH_SHARECODES='")
 })()
   .catch((e) => {
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -94,6 +97,7 @@ function getJdFactory() {
                     console.log(
                       `【京东账号${$.index}（${$.nickName || $.UserName}）东东工厂】${item.assistTaskDetailVo.taskToken}`
                     );
+                    ddfactoryCode.push(item.assistTaskDetailVo.taskToken)
                   }
                 });
               }
@@ -665,7 +669,7 @@ function getJdCash() {
 }
 // 互助吗格式
 async function pjCode(arrayCode, codeUsage){
-  console.log("互助码用途:",codeUsage)
+  console.log("####### 互助码用途:",codeUsage)
   for(let i=0;i<arrayCode.length;i++){
     //拼接code
     let pjCode = []
@@ -676,7 +680,7 @@ async function pjCode(arrayCode, codeUsage){
     }
     console.log(pjCode.join('@'))
   }
-  console.log('\n')
+  console.log("'\n")
 }
 
 // 主要逻辑，执行输出助力吗
@@ -684,7 +688,7 @@ async function getShareCode() {
   console.log(`======账号${$.index}开始======`)
   await getJDFruit()
   await getPlantBean()
-  // await getJdFactory()
+  await getJdFactory()
   // await getJxFactory()
   // await getJxNc()
   // await getJdZZ()
