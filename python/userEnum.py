@@ -1,3 +1,4 @@
+# enum user for linux distributions the openssh of which is under version 7.4 
 import argparse, logging, paramiko, socket, sys, os
 
 class InvalidUsername(Exception):
